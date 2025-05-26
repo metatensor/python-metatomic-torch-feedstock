@@ -49,25 +49,25 @@ jobs:
             SHORT_CONFIG: linux_aarch64_python3.10.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['ubuntu-latest']
+            runs_on: ['ubuntu-24.04-arm']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
           - CONFIG: linux_aarch64_python3.11.____cpython
             SHORT_CONFIG: linux_aarch64_python3.11.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['ubuntu-latest']
+            runs_on: ['ubuntu-24.04-arm']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
           - CONFIG: linux_aarch64_python3.12.____cpython
             SHORT_CONFIG: linux_aarch64_python3.12.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['ubuntu-latest']
+            runs_on: ['ubuntu-24.04-arm']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
           - CONFIG: linux_aarch64_python3.9.____cpython
             SHORT_CONFIG: linux_aarch64_python3.9.____cpython
             UPLOAD_PACKAGES: True
             os: ubuntu
-            runs_on: ['ubuntu-latest']
+            runs_on: ['ubuntu-24.04-arm']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma9
           - CONFIG: osx_64_python3.10.____cpython
             SHORT_CONFIG: osx_64_python3.10.____cpython
@@ -145,8 +145,10 @@ jobs:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
       shell: bash
       run: |
-        echo "::group::Configure binfmt_misc"
-        docker run --rm --privileged multiarch/qemu-user-static:register --reset --credential yes
+        if [[ "$(uname -m)" == "x86_64" ]]; then
+          echo "::group::Configure binfmt_misc"
+          docker run --rm --privileged multiarch/qemu-user-static:register --reset --credential yes
+        fi
         export flow_run_id="github_$GITHUB_RUN_ID"
         export remote_url="https://github.com/$GITHUB_REPOSITORY"
         export sha="$GITHUB_SHA"
